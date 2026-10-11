@@ -1,0 +1,47 @@
+name: Tests
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compile check
+        run: |
+          python -m compileall loadlens streamlit_app.py -q
+
+      - name: Run tests
+        run: |
+          python -m pytest -q --tb=short
+
+      - name: Import smoke test
+        run: |
+          python -c "
+          from loadlens.algorithms.allocation import optimize_allocation
+          from loadlens.algorithms.rotated_search import rotated_binary_search
+          from loadlens.services.csv_service import parse_csv_tasks
+          from loadlens.models import Task
+          result = optimize_allocation([Task('A', 7), Task('B', 2), Task('C', 5), Task('D', 10), Task('E', 8)], 3)
+          assert result.optimal_capacity == 14, f'Expected 14, got {result.optimal_capacity}'
+          print('Smoke test passed: optimal_capacity =', result.optimal_capacity)
+          "

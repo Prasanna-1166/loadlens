@@ -1,0 +1,47 @@
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Test outputs
+.pytest_cache/
+.coverage
+htmlcov/
+*.xml
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Streamlit runtime
+.streamlit/secrets.toml
+
+# LoadLens local database — local-first, not committed
+*.db
+*.sqlite
+*.sqlite3
+data/
+
+# Secrets and credentials — never commit
+.env
+*.env
+secrets.*
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
